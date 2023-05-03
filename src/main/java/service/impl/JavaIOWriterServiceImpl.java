@@ -1,7 +1,6 @@
 package service.impl;
 
-
-import model.Label;
+import com.google.gson.Gson;
 import model.Writer;
 import repository.PostRepository;
 import repository.WriterRepository;
@@ -33,7 +32,10 @@ public class JavaIOWriterServiceImpl implements WriterService {
         writer.setId(writerRepo.getLastId() + 1);
         writer.setFirstName(firstName);
         writer.setLastName(lastName);
+        Gson gson = new Gson();
+        gson.toJson(writer);
         writerRepo.save(writer);
+
     }
 
     @Override

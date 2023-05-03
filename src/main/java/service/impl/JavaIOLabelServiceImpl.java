@@ -1,5 +1,6 @@
 package service.impl;
 
+import com.google.gson.Gson;
 import model.Label;
 import repository.LabelRepository;
 import repository.PostRepository;
@@ -30,6 +31,8 @@ public class JavaIOLabelServiceImpl implements LabelService {
         Label label = new Label();
         label.setId(labelRepo.getLastId() + 1);
         label.setName(name);
+        Gson gson = new Gson();
+        gson.toJson(label);
         labelRepo.save(label);
     }
 

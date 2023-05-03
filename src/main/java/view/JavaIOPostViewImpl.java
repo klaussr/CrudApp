@@ -14,11 +14,10 @@ public class JavaIOPostViewImpl extends PostView {
 
     private final String mainMenuMessage = "Выберите действие над постами:\n" +
             " 1. Создать пост\n" +
-            " 2. Завершить пост\n" +
-            " 3. Редактировать пост\n" +
-            " 4. Удалить пост\n" +
-            " 5. Вывести список постов\n" +
-            " 6. Выход";
+            " 2. Редактировать пост\n" +
+            " 3. Удалить пост\n" +
+            " 4. Вывести список постов\n" +
+            " 5. Выход";
 
     private final String printMenuMessage = "Список постов\n" +
             "ID; Name; Status; WriterName; Labels";
@@ -29,9 +28,6 @@ public class JavaIOPostViewImpl extends PostView {
             Message.ID.getMessage();
 
     private final String deleteMenuMessage = "Удаление поста.\n" +
-            Message.ID.getMessage();
-
-    private final String finishMenuMessage = "Завершение поста.\n" +
             Message.ID.getMessage();
 
     private final String addSameLabelMessage = "Метка уже добавлена! Выберите другую...\n" +
@@ -64,18 +60,15 @@ public class JavaIOPostViewImpl extends PostView {
                     create();
                     break;
                 case "2":
-                    finish();
-                    break;
-                case "3":
                     edit();
                     break;
-                case "4":
+                case "3":
                     delete();
                     break;
-                case "5":
+                case "4":
                     print();
                     break;
-                case "6":
+                case "5":
                     isExit = true;
                     break;
                 default:
@@ -177,8 +170,8 @@ public class JavaIOPostViewImpl extends PostView {
         System.out.println(printMenuMessage);
         if (posts.size() != 0) {
             for (Post p : posts) {
-                String printLine = p.getId() + "; " + p.getName() + "; " + p.getStatus() + "; " + p.getWriter().getFirstName() +  "; " + p.getWriter().getLastName() + "; ";
-                StringJoiner joiner = new StringJoiner("/");
+                String printLine = p.getId() + " " + p.getName() + " " + p.getStatus() + " " + p.getWriter().getFirstName() +  " " + p.getWriter().getLastName() + " ";
+                StringJoiner joiner = new StringJoiner(" ");
                 for (Label c : p.getLabels()
                 ) {
                     joiner.add(c.getName());
@@ -197,7 +190,6 @@ public class JavaIOPostViewImpl extends PostView {
     @Override
     public void finish() {
         System.out.println(Message.LINE.getMessage());
-        System.out.println(finishMenuMessage);
         Long id = sc.nextLong();
         try
         {

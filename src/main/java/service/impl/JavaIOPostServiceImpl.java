@@ -1,5 +1,6 @@
 package service.impl;
 
+import com.google.gson.Gson;
 import model.Label;
 import model.Post;
 import model.Status;
@@ -44,6 +45,8 @@ public class JavaIOPostServiceImpl implements PostService {
         post.setWriterId(writerId);
         post.setLabelIds(labelIds);
         post.setStatus(Status.ACTIVE);
+        Gson gson = new Gson();
+        gson.toJson(post);
         postRepo.save(post);
     }
 

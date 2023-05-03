@@ -14,7 +14,7 @@ import java.util.List;
 
 public class JavaIOLabelRepositoryImpl implements LabelRepository {
 
-    private final static String FILE_NAME = "labels.txt";
+    private final static String FILE_NAME = "labels.gson";
 
     public JavaIOLabelRepositoryImpl() {
     }
@@ -92,7 +92,7 @@ public class JavaIOLabelRepositoryImpl implements LabelRepository {
         List<Label> labels = new ArrayList<>();
 
         for (String str : data) {
-            String[] parts = str.split(",");
+            String[] parts = str.split(" ");
             Label label = new Label();
             label.setId(Long.parseLong(parts[0]));
             label.setName(parts[1]);
@@ -113,6 +113,6 @@ public class JavaIOLabelRepositoryImpl implements LabelRepository {
 
     @Override
     public String dataToString(Label label) {
-        return label.getId() + "," + label.getName();
+        return label.getId() + " " + label.getName();
     }
 }

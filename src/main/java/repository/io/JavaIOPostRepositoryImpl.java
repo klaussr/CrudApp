@@ -14,7 +14,7 @@ public class JavaIOPostRepositoryImpl implements PostRepository {
     private WriterRepository writerRepository;
     private LabelRepository labelRepository;
 
-    private final static String FILE_NAME = "posts.txt";
+    private final static String FILE_NAME = "posts.gson";
 
     private final String cannotEditDeletedPostMessage = "Нельзя редактировать удаленный пост!";
 
@@ -124,7 +124,7 @@ public class JavaIOPostRepositoryImpl implements PostRepository {
 
         for (String str : items
         ) {
-            String[] parts = str.split(",");
+            String[] parts = str.split(" ");
             Post post = new Post();
 
             post.setId(Long.parseLong(parts[0]));
@@ -135,7 +135,7 @@ public class JavaIOPostRepositoryImpl implements PostRepository {
             post.setWriterId(writerId);
             post.setWriter(writerRepository.getById(writerId));
 
-            String[] cIds = parts[4].split("/");
+            String[] cIds = parts[4].split(" ");
             List<Label> labels = new ArrayList<>();
             ArrayList<Long> labelIds = new ArrayList<>();
             for (String id : cIds
@@ -166,8 +166,8 @@ public class JavaIOPostRepositoryImpl implements PostRepository {
 
     @Override
     public String dataToString(Post pr) {
-        String data = pr.getId() + "," + pr.getName() + "," + pr.getStatus() + "," + pr.getWriterId() + ",";
-        StringJoiner joiner = new StringJoiner("/");
+        String data = pr.getId() + " " + pr.getName() + " " + pr.getStatus() + " " + pr.getWriterId() + " ";
+        StringJoiner joiner = new StringJoiner(" ");
         for (Long c : pr.getLabelIds()
         ) {
             joiner.add(c+"");

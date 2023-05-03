@@ -14,7 +14,7 @@ import java.util.List;
 
 public class JavaIOWriterRepositoryImpl implements WriterRepository {
 
-    private final static String FILE_NAME = "writers.txt";
+    private final static String FILE_NAME = "writers.gson";
 
     public JavaIOWriterRepositoryImpl() {
     }
@@ -91,7 +91,7 @@ public class JavaIOWriterRepositoryImpl implements WriterRepository {
 
         for (String str : items
         ) {
-            String[] parts = str.split(",");
+            String[] parts = str.split(" ");
             Writer writer = new Writer();
             writer.setId(Long.parseLong(parts[0]));
             writer.setFirstName(parts[1]);
@@ -114,6 +114,6 @@ public class JavaIOWriterRepositoryImpl implements WriterRepository {
 
     @Override
     public String dataToString(Writer writer) {
-        return writer.getId() + "," + writer.getFirstName() + "," + writer.getLastName();
+        return writer.getId() + " " + writer.getFirstName() + " " + writer.getLastName();
     }
 }
