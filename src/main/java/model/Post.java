@@ -5,10 +5,10 @@ import java.util.Set;
 
 public class Post extends NamedEntity{
     private String content;
-    private Boolean created;
-    private Boolean updated;
+    private Long created;
+    private Long updated;
     private List<Label> labels;
-    private Enum<Status> status;
+    private Status status;
 
     private Writer writer;
 
@@ -56,27 +56,27 @@ public class Post extends NamedEntity{
         this.content = content;
     }
 
-    public Boolean getCreated() {
+    public Long getCreated() {
         return created;
     }
 
-    public void setCreated(Boolean created) {
+    public void setCreated(Long created) {
         this.created = created;
     }
 
-    public Boolean getUpdated() {
+    public Long getUpdated() {
         return updated;
     }
 
-    public void setUpdated(Boolean updated) {
+    public void setUpdated(Long updated) {
         this.updated = updated;
     }
 
-    public Enum<Status> getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Enum<Status> status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

@@ -1,13 +1,13 @@
 package model;
 
 public class Label extends NamedEntity{
-    private Enum<Status> status;
+    private Status status;
 
-    public Enum<Status> getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Enum<Status> status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

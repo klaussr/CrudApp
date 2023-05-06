@@ -1,40 +1,26 @@
 package controller;
 
 import model.Label;
-import service.LabelService;
+import repository.LabelRepository;
+import repository.io.GsonLabelRepositoryImpl;
 
 import java.util.List;
 
 public class LabelController {
+    private final LabelRepository labelRepository = new GsonLabelRepositoryImpl();
 
-    LabelService labelService;
-
-    public LabelController(LabelService labelService) {
-        this.labelService = labelService;
+    public Label getById(Long id) {
+        return labelRepository.getById(id);
     }
 
-    public List<Label> getAll() throws Exception {
-
-        return labelService.getAll();
+    public Label save(String name) {
+        Label label = new Label();
+        label.setName(name);
+        return labelRepository.save(label);
     }
 
-    public Label getById(Long id) throws Exception {
-
-        return labelService.getById(id);
-    }
-
-    public void create(String name) throws Exception {
-
-        labelService.create(name);
-    }
-
-    public void update(Long id, String name) throws Exception {
-
-        labelService.update(id, name);
-    }
-
-    public void delete(Long id) throws Exception {
-
-        labelService.delete(id);
+    public List<Label> getAll(){
+        return labelRepository.getAll();
     }
 }
+

@@ -6,7 +6,7 @@ public class Writer extends BaseEntity {
     private String firstName;
     private String lastName;
     private List<Post> posts;
-    private Enum<Status> status;
+    private Status status;
 
     public String getFirstName() {
         return firstName;
@@ -28,11 +28,11 @@ public class Writer extends BaseEntity {
         this.lastName = lastName;
     }
 
-    public Enum<Status> getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Enum<Status> status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

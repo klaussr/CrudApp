@@ -1,41 +1,26 @@
 package controller;
 
+import model.Label;
 import model.Writer;
-import service.WriterService;
+import repository.LabelRepository;
+import repository.WriterRepository;
+import repository.io.GsonLabelRepositoryImpl;
+import repository.io.GsonWriterRepositoryImpl;
 
 import java.util.List;
 
 public class WriterController {
 
-    WriterService writerService;
+    private final WriterRepository writerRepository = new GsonWriterRepositoryImpl();
 
-    public WriterController(WriterService writerService) {
-
-        this.writerService = writerService;
+    public Writer getById(Long id) {
+        return writerRepository.getById(id);
     }
 
-    public List<Writer> getAll() throws Exception {
-
-        return writerService.getAll();
-    }
-
-    public Writer getById(Long id) throws Exception {
-
-        return writerService.getById(id);
-    }
-
-    public void create(String firstName, String lastName) throws Exception {
-
-        writerService.create(firstName, lastName);
-    }
-
-    public void update(Long id, String firstName, String lastName) throws Exception {
-
-        writerService.update(id, firstName, lastName);
-    }
-
-    public void delete(Long id) throws Exception {
-
-        writerService.delete(id);
+    public Writer save(String firstName, String lastName) {
+        Writer writer = new Writer();
+        writer.setFirstName(firstName);
+        writer.setLastName(lastName);
+        return writerRepository.save(writer);
     }
 }

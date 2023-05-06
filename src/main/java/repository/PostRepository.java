@@ -1,15 +1,14 @@
 package repository;
 
 
-import model.Label;
-import model.Post;
-import model.Writer;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import model.*;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface PostRepository extends GenericRepository<Post, Long> {
 
-    boolean isContainLabel(Label label) throws Exception;
-    boolean isContainWriter(Writer writer ) throws Exception;
-    void checkEdit(Long id) throws Exception;
-    void checkLabel(Long id) throws Exception;
-    void checkWriter(Long id) throws Exception;
 }
