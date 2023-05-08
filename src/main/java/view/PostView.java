@@ -2,16 +2,15 @@ package view;
 
 import controller.LabelController;
 import controller.PostController;
+import controller.WriterController;
 import model.*;
+import repository.PostRepository;
+import repository.io.GsonPostRepositoryImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PostView extends BaseView {
-
-    private Scanner sc;
-    private BaseView writerView;
-    private BaseView labelView;
-
     private final String mainMenuMessage = "Выберите действие над постами:\n" +
             " 1. Создать пост\n" +
             " 2. Редактировать пост\n" +
@@ -19,8 +18,7 @@ public class PostView extends BaseView {
             " 4. Вывести список постов\n" +
             " 5. Выход";
 
-    private final String printMenuMessage = "Список постов\n" +
-            "ID; Name; Status; WriterName; Labels";
+    private final String printMenuMessage = "Список постов\n";
 
     private final String createMenuMessage = "Создание поста.";
 
@@ -36,18 +34,109 @@ public class PostView extends BaseView {
     private final String wantAddLabelMessage = "Хотите добавить еще метку? (y/n):";
 
     private final String answerYes = "y";
+    private final PostController postController = new PostController();
 
+    private final PostRepository postRepository = new GsonPostRepositoryImpl();
+
+    private final WriterController writerController = new WriterController();
+
+    private final LabelController labelController = new LabelController();
+    private final Scanner scanner = new Scanner(System.in);
+
+    public PostView() {
+
+    }
+
+    public void getById() {
+        System.out.println(Message.ID);
+        Long id = scanner.nextLong();
+        postController.getById(id);
+    }
+
+    public void create() {
+        System.out.println(createMenuMessage);
+        for (Writer w : writerController.getAll()) {
+            System.out.println(w.getId() + " " + w.getFirstName() + " " + w.getLastName());
+        }
+        System.out.println(Message.ID.getMessage());
+        Long writerId = Long.parseLong(scanner.next());
+        List<Label> labels = new ArrayList<>();
+        for (Label label : labelController.getAll()) {
+            System.out.println(label.getId() + " " + label.getName());
+        }
+        System.out.println(Message.ID.getMessage());
+        Long labelId = Long.parseLong(scanner.next());
+        labels.add(labelController.getById(labelId));
+        System.out.println(wantAddLabelMessage);
+        if (scanner.next().equals(answerYes)) {
+            Long labelId2 = Long.parseLong(scanner.next());
+            labels.add(labelController.getById(labelId2));
+        }
+        postController.save(writerController.getById(writerId), labels);
+    }
+
+    @Override
+    void edit() {
+        System.out.println(editMenuMessage);
+        System.out.println(Message.ID.getMessage());
+        long id = Long.parseLong(scanner.next());
+        for (Writer w : writerController.getAll()) {
+            System.out.println(w.getId() + " " + w.getFirstName() + " " + w.getLastName());
+        }
+        System.out.println(Message.ID.getMessage());
+        Long newIdWriter = Long.parseLong(scanner.next());
+        for (Label label : labelController.getAll()) {
+            System.out.println(label.getId() + label.getName());
+        }
+        System.out.println(Message.ID.getMessage());
+        Long labelId1 = Long.parseLong(scanner.next());
+        List<Label> labels = new ArrayList<>();
+        labels.add(labelController.getById(labelId1));
+        System.out.println(wantAddLabelMessage);
+        if (scanner.next().equals(answerYes)) {
+            Long labelId2 = Long.parseLong(scanner.next());
+            labels.add(labelController.getById(labelId2));
+        }
+        postController.update(id, newIdWriter, labels);
+    }
+
+    @Override
+    void delete() {
+        System.out.println(deleteMenuMessage);
+        System.out.println(Message.ID);
+        Long id = Long.parseLong(scanner.next());
+        postRepository.deleteById(id);
+    }
+
+    @Override
+    void print() {
+        System.out.println(printMenuMessage);
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+        for (Post p : postController.getAll()) {
+            System.out.print("id: " + p.getId() + "    post's writer: " + p.getWriter().getFirstName() + " " + p.getWriter().getLastName() +
+                    "    post's status: " + p.getStatus());
+
+            if (p.getLabels() != null) {
+                System.out.print("    post labels: ");
+                for (Label label : p.getLabels()) {
+                    System.out.print(label.getName() + " ");
+                }
+            } else System.out.print("none");
+            if (p.getCreated() != null) System.out.print("    creation date:" + formatDate.format(p.getCreated()));
+            if (p.getUpdated() != null) System.out.print("    update date:" + formatDate.format(p.getUpdated()));
+            System.out.println();
+        }
+    }
 
     @Override
     public void show() {
         boolean isExit = false;
-        while (true) {
-            print();
+        do {
             System.out.println(Message.LINE.getMessage());
             System.out.println(mainMenuMessage);
             System.out.println(Message.LINE.getMessage());
 
-            String response = sc.next();
+            String response = scanner.next();
 
             switch (response) {
                 case "1":
@@ -70,47 +159,10 @@ public class PostView extends BaseView {
                     break;
             }
 
-            if (isExit)
-                break;
-        }
-    }
-
-    private final PostController postController = new PostController();
-    private final Scanner scanner = new Scanner(System.in);
-
-    public PostView(PostController postController, Scanner scanner, WriterView writerView, LabelView labelView) {
-
-    }
-
-    public void getById() {
-        System.out.println("Enter id");
-        Long id = scanner.nextLong();
-        Post result = postController.getById(id);
-        System.out.println("Post " + result);
-    }
-
-    public void create() {
-        System.out.println("Enter name");
-        String name = scanner.nextLine();
-        Post result = postController.save(name);
-        System.out.println("Post " + result);
-    }
-
-    @Override
-    void edit() {
-
-    }
-
-    @Override
-    void delete() {
-
-    }
-
-    @Override
-    void print() {
-
+        } while (!isExit);
     }
 }
+
 
 //
 //    @Override

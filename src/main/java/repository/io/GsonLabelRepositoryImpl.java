@@ -2,34 +2,26 @@ package repository.io;
 
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import model.BaseEntity;
 import model.Label;
-import model.Post;
 import model.Status;
 import repository.LabelRepository;
-
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.nio.MappedByteBuffer;
+import java.util.Objects;
 
 
 public class GsonLabelRepositoryImpl implements LabelRepository {
-    private final static String FILE_NAME = "labels.json";
+    private final static String FILE_NAME = "src/main/resources/files/labels.json";
     private final Gson GSON = new Gson();
 
     public GsonLabelRepositoryImpl() {
@@ -37,14 +29,13 @@ public class GsonLabelRepositoryImpl implements LabelRepository {
 
     private List<Label> readLabelsFromFile() {
         //TODO read file content with NIO
-        int count;
-        String content = "";
+        StringBuilder content = new StringBuilder();
 
-        try (FileChannel fc = (FileChannel) Files.newByteChannel(Paths.get("labels.json"))) {
+        try (FileChannel fc = (FileChannel) Files.newByteChannel(Paths.get(FILE_NAME))){
             long fsize = fc.size();
             MappedByteBuffer mappedByteBuffer = fc.map(FileChannel.MapMode.READ_ONLY,0, fsize);
             for (int i = 0; i < fsize; i++) {
-                content = String.valueOf( mappedByteBuffer.get());
+                content.append((char) mappedByteBuffer.get());
             }
         } catch (InvalidPathException e) {
             System.out.println("Path error" + e);
@@ -52,20 +43,17 @@ public class GsonLabelRepositoryImpl implements LabelRepository {
         } catch (IOException e) {
             System.out.println("Ошибка ввода-вывода " + e);
         }
-        catch (NullPointerException e) {
-            return new ArrayList<>();
-        }
-        if (content.equals("")) return new ArrayList<>();
+        if (content.toString().equals("")) return new ArrayList<>();
         Type targetClassType = new TypeToken<ArrayList<Label>>() {
         }.getType();
-        return GSON.fromJson(content, targetClassType);
+        return GSON.fromJson(content.toString(), targetClassType);
     }
 
     private void writeLabelsToFile(List<Label> labels) {
         String content = GSON.toJson(labels);
 
         //TODO: write to the file with NIO
-        try (FileChannel fc = (FileChannel) Files.newByteChannel(Paths.get("labels.json"), StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.CREATE)){
+        try (FileChannel fc = (FileChannel) Files.newByteChannel(Paths.get(FILE_NAME), StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.CREATE)){
             MappedByteBuffer mappedByteBuffer = fc.map(FileChannel.MapMode.READ_WRITE,0, content.length());
             for (int i = 0; i < content.length(); i++) {
                 mappedByteBuffer.put((byte) (content.charAt(i)));
@@ -80,17 +68,17 @@ public class GsonLabelRepositoryImpl implements LabelRepository {
     }
 
     private Long generateNewId(List<Label> labels) {
-        long currentMaxId=0L;
+        long currentMaxId;
         if (labels == null) {
             return currentMaxId = 1;
         }
-         labels.stream().mapToLong(BaseEntity::getId).max().orElse(0L);
+         currentMaxId = labels.stream().mapToLong(BaseEntity::getId).max().orElse(0L);
         return currentMaxId + 1;
     }
 
 
     public Label getById(final Long id) {
-        return readLabelsFromFile().stream()
+        return Objects.requireNonNull(readLabelsFromFile()).stream()
                 .filter(l -> l.getId().equals(id))
                 .findFirst()
                 .orElse(null);
@@ -98,24 +86,23 @@ public class GsonLabelRepositoryImpl implements LabelRepository {
 
     public void deleteById(Long id) {
         List<Label> currentLabels = readLabelsFromFile();
-        currentLabels.stream()
-                .map(labelInFile -> {
-                    if (labelInFile.getId().equals(id)) {
-                        labelInFile.setStatus(Status.DELETED);
-                    }
-                    return labelInFile;
-                });
+        for (Label l : Objects.requireNonNull(currentLabels)) {
+            if (l.getId().equals(id)) {
+                l.setStatus(Status.DELETED);
+            }
+        }
         writeLabelsToFile(currentLabels);
     }
 
+    @Override
     public Label update(Label item) {
         List<Label> currentLabels = readLabelsFromFile();
-        currentLabels.stream().map(labelInFile -> {
-            if (labelInFile.getId().equals(item.getId())) {
-                return item;
+      for (Label l : Objects.requireNonNull(currentLabels)) {
+            if (l.getId().equals(item.getId())) {
+                l.setStatus(Status.DELETED);
             }
-            return labelInFile;
-        });
+        }
+        currentLabels.add(item);
         writeLabelsToFile(currentLabels);
         return item;
     }
@@ -123,7 +110,7 @@ public class GsonLabelRepositoryImpl implements LabelRepository {
     public Label save(Label item) {
         List<Label> currentLabels = readLabelsFromFile();
         item.setId(generateNewId(currentLabels));
-        currentLabels.add(item);
+        Objects.requireNonNull(currentLabels).add(item);
         writeLabelsToFile(currentLabels);
         return item;
     }

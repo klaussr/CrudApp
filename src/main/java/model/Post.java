@@ -1,9 +1,8 @@
 package model;
 
 import java.util.List;
-import java.util.Set;
 
-public class Post extends NamedEntity{
+public class Post extends BaseEntity{
     private String content;
     private Long created;
     private Long updated;
@@ -14,17 +13,7 @@ public class Post extends NamedEntity{
 
     private Long writerId;
 
-    private List<Long> labelIds;
-
-    public List<Long> getLabelIds() {
-        return labelIds;
-    }
-
-    public void setLabelIds(List<Long> labelIds) {
-        this.labelIds = labelIds;
-    }
-
-    public Long getWriterId() {
+   public Long getWriterId() {
         return writerId;
     }
 

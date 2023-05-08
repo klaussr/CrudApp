@@ -1,18 +1,14 @@
 package view;
 
 import controller.WriterController;
-import model.BaseEntity;
 import model.Message;
 import model.Writer;
+import repository.WriterRepository;
+import repository.io.GsonWriterRepositoryImpl;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Scanner;
 
 public class WriterView extends BaseView {
-
-    /*    private Scanner sc;*/
 
     private final String mainMenuMessage = "Выберите действие над писателями:\n" +
             " 1. Создать\n" +
@@ -25,7 +21,7 @@ public class WriterView extends BaseView {
 
 
     private final String createMenuMessage = "Создание писателя.\n" +
-            Message.LASTNAME.getMessage();
+            Message.FIRST_LASTNAME.getMessage();
 
     private final String editMenuMessage = "Редактирование писателя.\n" +
             Message.ID.getMessage();
@@ -34,38 +30,89 @@ public class WriterView extends BaseView {
             Message.ID.getMessage();
 
     private final WriterController writerController = new WriterController();
+
+    private final WriterRepository writerRepository = new GsonWriterRepositoryImpl();
     private final Scanner scanner = new Scanner(System.in);
 
-    public WriterView(WriterController labelController, Scanner scanner) {
+    public WriterView() {
 
     }
 
     public void getById() {
-        System.out.println("Enter id");
+        System.out.println(Message.ID.getMessage());
         Long id = scanner.nextLong();
-        Writer result = writerController.getById(id);
-        System.out.println("Writer " + result);
+        writerController.getById(id);
     }
 
     public void create() {
+        System.out.println(createMenuMessage);
         System.out.println("Enter first name");
-        String firstName = scanner.nextLine();
+        String firstName = scanner.next();
         System.out.println("Enter last name");
-        String lastName = scanner.nextLine();
-        Writer result = writerController.save(firstName, lastName);
-        System.out.println("Writer " + result);
+        String lastName = scanner.next();
+        writerController.save(firstName, lastName);
     }
 
     @Override
     void edit() {
-
+        System.out.println(editMenuMessage);
+        System.out.println(Message.ID.getMessage());
+        long id = Long.parseLong(scanner.next());
+        System.out.println(Message.FIRST_LASTNAME.getMessage());
+        String newFirstName = scanner.next();
+        String newLastName = scanner.next();
+        writerController.update(id, newFirstName, newLastName);
     }
 
     @Override
-    public void delete(){}
+    public void delete() {
+        System.out.println(deleteMenuMessage);
+        System.out.println(Message.ID.getMessage());
+        Long id = Long.parseLong(scanner.next());
+        writerRepository.deleteById(id);
+        System.out.println(writerController.getById(id).getId() + " " + writerController.getById(id).getFirstName() + " " +
+                writerController.getById(id).getLastName() + " " + writerController.getById(id).getStatus());
+    }
+
 
     @Override
     void print() {
+        for (Writer w : writerController.getAll()) {
+            System.out.println(printMenuMessage);
+            System.out.println(w.getId() + " " + w.getFirstName() + " " + w.getLastName());
+        }
+    }
+
+    @Override
+    public void show() {
+        boolean isExit = false;
+        do {
+            System.out.println(Message.LINE.getMessage());
+            System.out.println(mainMenuMessage);
+            System.out.println(Message.LINE.getMessage());
+            String response = scanner.next();
+            switch (response) {
+                case "1":
+                    create();
+                    break;
+
+                case "2":
+                    edit();
+                    break;
+                case "3":
+                    delete();
+                    break;
+                case "4":
+                    print();
+                    break;
+                case "5":
+                    isExit = true;
+                    break;
+                default:
+                    System.out.println(Message.ERROR_INPUT.getMessage());
+                    break;
+            }
+        } while (!isExit);
     }
 
 }

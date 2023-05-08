@@ -20,8 +20,7 @@ public abstract class BaseView {
 
     void show(){
         boolean isExit = false;
-        while (true) {
-            print();
+        do {
             System.out.println(Message.LINE.getMessage());
             System.out.println(message);
             System.out.println(Message.LINE.getMessage());
@@ -47,8 +46,6 @@ public abstract class BaseView {
                     break;
             }
 
-            if (isExit)
-                break;
-        }
+        } while (!isExit);
     }
 }

@@ -3,6 +3,8 @@ package view;
 import controller.LabelController;
 import model.Label;
 import model.Message;
+import repository.LabelRepository;
+import repository.io.GsonLabelRepositoryImpl;
 
 import java.util.Scanner;
 
@@ -26,50 +28,64 @@ public class LabelView extends BaseView {
     private final String deleteMenuMessage = "Удаление метки\n" +
             Message.ID.getMessage();
     private final LabelController labelController = new LabelController();
-    private final Scanner sc = new Scanner(System.in);
 
-    public LabelView(LabelController labelController, Scanner sc) {
+    private final LabelRepository labelRepository = new GsonLabelRepositoryImpl();
+
+    private final Scanner scanner = new Scanner(System.in);
+
+    public LabelView() {
 
     }
 
     public void getById() {
-        System.out.println("Enter id");
-        Long id = sc.nextLong();
-        Label result = labelController.getById(id);
-        System.out.println("Label " + result);
+        System.out.println(Message.ID.getMessage());
+        Long id = scanner.nextLong();
+        labelController.getById(id);
     }
 
     public void create() {
-        System.out.println("Enter name");
-        String name = sc.next();
-        Label result = labelController.save(name);
-        System.out.println("Label " + result);
+        System.out.println(createMenuMessage);
+        System.out.println(Message.NAME.getMessage());
+        String name = scanner.next();
+        labelController.save(name);
     }
 
     @Override
     void edit() {
-
+        System.out.println(editMenuMessage);
+        System.out.println(Message.ID.getMessage());
+        long id = Long.parseLong(scanner.next());
+        System.out.println(Message.NAME.getMessage());
+        String newName = scanner.next();
+        labelController.update(id, newName);
     }
 
     @Override
-    public void delete(){}
+    public void delete(){
+        System.out.println(deleteMenuMessage);
+        System.out.println(Message.ID.getMessage());
+        Long id = Long.parseLong(scanner.next());
+        labelRepository.deleteById(id);
+        System.out.println(labelController.getById(id).getId() + " " + labelController.getById(id).getName() + " " +
+                           labelController.getById(id).getStatus());
+    }
 
     @Override
     void print() {
-        labelController.getAll();
+        System.out.println(printMenuMessage);
+        for (Label l: labelController.getAll()){
+            System.out.println(l.getId() + " " + l.getName());
+        }
     }
 
     @Override
     public void show() {
         boolean isExit = false;
-        while (true) {
-            print();
+        do {
             System.out.println(Message.LINE.getMessage());
             System.out.println(mainMenuMessage);
             System.out.println(Message.LINE.getMessage());
-
-            String response = sc.next();
-
+            String response = scanner.next();
             switch (response) {
                 case "1":
                     create();
@@ -92,8 +108,6 @@ public class LabelView extends BaseView {
                     break;
             }
 
-            if (isExit)
-                break;
-        }
+        } while (!isExit);
     }
 }
