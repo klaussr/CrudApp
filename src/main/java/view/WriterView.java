@@ -20,14 +20,11 @@ public class WriterView extends BaseView {
     private final String printMenuMessage = "Список писателей:\n";
 
 
-    private final String createMenuMessage = "Создание писателя.\n" +
-            Message.FIRST_LASTNAME.getMessage();
+    private final String createMenuMessage = "Создание писателя.\n";
 
-    private final String editMenuMessage = "Редактирование писателя.\n" +
-            Message.ID.getMessage();
+    private final String editMenuMessage = "Редактирование писателя.\n";
 
-    private final String deleteMenuMessage = "Удаление писателя\n" +
-            Message.ID.getMessage();
+    private final String deleteMenuMessage = "Удаление писателя\n";
 
     private final WriterController writerController = new WriterController();
 
@@ -77,8 +74,8 @@ public class WriterView extends BaseView {
 
     @Override
     void print() {
+        System.out.println(printMenuMessage);
         for (Writer w : writerController.getAll()) {
-            System.out.println(printMenuMessage);
             System.out.println(w.getId() + " " + w.getFirstName() + " " + w.getLastName());
         }
     }

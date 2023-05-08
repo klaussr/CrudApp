@@ -19,14 +19,11 @@ public class LabelView extends BaseView {
 
     private final String printMenuMessage = "Список меток:\n";
 
-    private final String createMenuMessage = "Создание меток.\n" +
-            Message.NAME.getMessage();
+    private final String createMenuMessage = "Создание меток.\n";
 
-    private final String editMenuMessage = "Редактирование метки.\n" +
-            Message.ID.getMessage();
+    private final String editMenuMessage = "Редактирование метки.\n";
 
-    private final String deleteMenuMessage = "Удаление метки\n" +
-            Message.ID.getMessage();
+    private final String deleteMenuMessage = "Удаление метки\n";
     private final LabelController labelController = new LabelController();
 
     private final LabelRepository labelRepository = new GsonLabelRepositoryImpl();

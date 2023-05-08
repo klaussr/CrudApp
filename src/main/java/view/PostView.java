@@ -22,14 +22,11 @@ public class PostView extends BaseView {
 
     private final String createMenuMessage = "Создание поста.";
 
-    private final String editMenuMessage = "Редактирование поста.\n" +
-            Message.ID.getMessage();
+    private final String editMenuMessage = "Редактирование поста.\n";
 
-    private final String deleteMenuMessage = "Удаление поста.\n" +
-            Message.ID.getMessage();
+    private final String deleteMenuMessage = "Удаление поста.\n";
 
-    private final String addSameLabelMessage = "Метка уже добавлена! Выберите другую...\n" +
-            "ID = ";
+    private final String addSameLabelMessage = "Метка уже добавлена! Выберите другую...\n";
 
     private final String wantAddLabelMessage = "Хотите добавить еще метку? (y/n):";
 
