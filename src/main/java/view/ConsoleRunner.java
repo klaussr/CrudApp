@@ -1,17 +1,6 @@
 package view;
 
-import controller.LabelController;
-import controller.PostController;
-import controller.WriterController;
 import model.Message;
-import repository.LabelRepository;
-import repository.PostRepository;
-import repository.WriterRepository;
-import repository.io.GsonLabelRepositoryImpl;
-import repository.io.GsonPostRepositoryImpl;
-import repository.io.GsonWriterRepositoryImpl;
-
-
 import java.util.Scanner;
 
 public class ConsoleRunner {
@@ -29,24 +18,14 @@ public class ConsoleRunner {
                                         "4. Выход";
 
 
-    private Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     public ConsoleRunner(){
         try {
-            //create repo
-            LabelRepository labelRepo = new GsonLabelRepositoryImpl();
-            WriterRepository writerRepo = new GsonWriterRepositoryImpl();
-            PostRepository postRepo = new GsonPostRepositoryImpl();
-
-            //create controllers
-            PostController postController = new PostController();
-            LabelController labelController = new LabelController();
-            WriterController writerController = new WriterController();
-
             //create views
-            labelView = new LabelView(labelController, sc);
-            writerView = new WriterView(writerController, sc);
-            postView = new PostView(postController, sc, (WriterView) writerView, (LabelView) labelView);
+            labelView = new LabelView();
+            writerView = new WriterView();
+            postView = new PostView();
         }
         catch (Exception ex)
         {
@@ -56,13 +35,12 @@ public class ConsoleRunner {
 
     public void run()  {
         boolean isExit = false;
-        while (true) {
+        do {
             System.out.println(Message.LINE.getMessage());
             System.out.println(menuMessage);
             System.out.println(Message.LINE.getMessage());
             String response = sc.next();
-            switch (response)
-            {
+            switch (response) {
                 case "1":
                     labelView.show();
                     break;
@@ -79,9 +57,7 @@ public class ConsoleRunner {
                     System.out.println(Message.ERROR_INPUT.getMessage());
                     break;
             }
-            if (isExit)
-                break;
-        }
+        } while (!isExit);
         sc.close();
     }
 }
