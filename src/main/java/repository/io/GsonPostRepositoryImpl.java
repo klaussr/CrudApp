@@ -24,7 +24,6 @@ public class GsonPostRepositoryImpl implements PostRepository {
     }
 
     private List<Post> readPostsFromFile() {
-        //TODO read file content with NIO
         StringBuilder content = new StringBuilder();
 
         try (FileChannel fc = (FileChannel) Files.newByteChannel(Paths.get(FILE_NAME))) {

@@ -26,7 +26,6 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
     }
 
     private List<Writer> readWritersFromFile() {
-        //TODO read file content with NIO
         StringBuilder content = new StringBuilder();
 
         try (FileChannel fc = (FileChannel) Files.newByteChannel(Paths.get(FILE_NAME))){
@@ -50,7 +49,6 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
     private void writeWritersToFile(List<Writer> writers) {
         String content = GSON.toJson(writers);
 
-        //TODO: write to the file with NIO
         try (FileChannel fc = (FileChannel) Files.newByteChannel(Paths.get(FILE_NAME), StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.CREATE)){
             MappedByteBuffer mappedByteBuffer = fc.map(FileChannel.MapMode.READ_WRITE,0, content.length());
             for (int i = 0; i < content.length(); i++) {
